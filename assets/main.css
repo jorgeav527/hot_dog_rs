@@ -1,0 +1,205 @@
+/* App-wide styling */
+html, body {
+    background-color: #0e0e0e;
+    color: white;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    min-height: 100%;
+    width: 100%;
+    overflow: auto;
+    margin: 0;
+}
+
+#main {
+    display: flex;
+    flex-direction: column;
+    min-height: 100%;
+    justify-content: space-between;
+}
+
+#dogview {
+    flex-grow: 1;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start; 
+    padding: 20px;
+}
+
+#dogview img {
+    display: block;
+    max-width: 90%; 
+    height: auto;
+    width: 800px; 
+    border-radius: 5px;
+    border: 1px solid rgb(233, 233, 233);
+    box-shadow: 0px 0px 5px 1px rgb(216, 216, 216, 0.5);
+    margin: 20px 0;
+}
+
+#title {
+    text-align: center;
+    padding-top: 10px;
+    border-bottom: 1px solid #a8a8a8;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    align-items: center;
+}
+
+#title a {
+    text-decoration: none;
+    color: white;
+}
+
+a#heart {
+    background-color: white;
+    color: red;
+    padding: 5px;
+    border-radius: 5px;
+}
+
+#title span {
+    width: 20px;
+}
+
+#title h1 {
+    margin: 0.25em;
+    font-style: italic;
+}
+
+#skip, #save, #click {
+    padding: 5px 30px 5px 30px;
+    border-radius: 3px;
+    font-size: 2rem;
+    font-weight: bold;
+    color: rgb(230, 230, 230)
+}
+
+#navbar {
+    border: 1px solid rgb(233, 233, 233);
+    border-width: 1px 0px 0px 0px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    padding: 20px;
+    gap: 20px;
+}
+
+#navbar a {
+    background-color: #a8a8a8;
+    border-radius: 5px;
+    border: 1px solid black;
+    text-decoration: none;
+    color: black;
+    padding: 10px 30px 10px 30px;
+}
+
+#favorites {
+    flex-grow: 1;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+}
+
+#favorites-container {
+    overflow-y: auto;
+    overflow-x: hidden;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+    padding: 10px;
+}
+
+.favorite-dog {
+    max-height: 180px;
+    max-width: 60%;
+    position: relative;
+}
+
+.favorite-dog img {
+    max-height: 150px;
+    border-radius: 5px;
+    margin: 5px;
+}
+
+.favorite-dog:hover button {
+    display: block;
+}
+
+.favorite-dog button {
+    display: none;
+    position: absolute;
+    bottom: 10px;
+    left: 10px;
+    z-index: 10;
+}
+
+.page-container {
+    padding: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+button {
+    padding: 10px 25px;
+    border-radius: 6px;
+    border: 1px solid transparent;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease; /* Makes hover effects smooth */
+    color: white; /* Most types use white text */
+}
+
+button:hover {
+    filter: brightness(1.2); /* Naturally lightens whatever color the button is */
+    transform: translateY(-1px); /* Slight lift effect */
+}
+
+button:active {
+    transform: translateY(0px); /* Pushes down when clicked */
+}
+
+/* Style variants */
+.btn-normal {
+    background-color: #333333;
+    border-color: #444444;
+}
+
+.btn-info {
+    background-color: #0070f3; /* Modern bright blue */
+    box-shadow: 0 0 10px rgba(0, 112, 243, 0.3);
+}
+
+.btn-danger {
+    background-color: #ff0000;
+    box-shadow: 0 0 10px rgba(255, 0, 0, 0.2);
+}
+
+.btn-success {
+    background-color: #00703c;
+    border-color: #00a550;
+}
+
+.w-4 { width: 1rem; }
+.h-4 { height: 1rem; }
+.block { display: block; }
+
+/* The conditional background */
+.bg-red-500 {
+    background-color: #ef4444;
+}
+
+/* The conditional border */
+.border {
+    border-width: 1px;
+    border-style: solid;
+}
+
+.border-blue-500 {
+    border-color: #3b82f6;
+}
