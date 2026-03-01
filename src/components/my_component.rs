@@ -37,13 +37,19 @@ pub fn BlogPost(props: BlogProps) -> Element {
     let mut box_width = use_signal(|| 0.0);
     let mut is_box_visible = use_signal(|| false);
     let mut copied = use_signal(|| false);
+    let user_name = Some("Alice");
+    let mut items_list = use_signal(|| vec!["Hello", "Dioxus"]);
 
     rsx! {
+        SlButton { variant: "success", size: "small", pill: true,
+            "Success Button" // This is the 'children'
+        }
         h1 {
             "Welcome to "
             {content}
         }
-        span {
+        MySwiper {}
+        div {
             {
                 format!(
                     "The time is: {now}, your timezone is {zone}",
@@ -53,7 +59,15 @@ pub fn BlogPost(props: BlogProps) -> Element {
                     .to_ascii_uppercase()
             }
         }
-        h3 { "Brought to you by {author}" }
+        ul {
+            for item in items_list.iter() {
+                li { key: "{item}", "{item}" }
+            }
+        }
+        h3 {
+            "Brought to you by {author}"
+            {user_name.map(|name| rsx! { "Logged in as: {name} " })}
+        }
         label {
             input { r#type: "checkbox", onchange: move |_| is_private.toggle() }
             " Enable Privacy Mode"
@@ -130,6 +144,43 @@ pub fn BlogPost(props: BlogProps) -> Element {
             div { style: "padding: 40px; background: coral; color: white; border-radius: 10px;",
                 "🎉 You found me! I only animate once I'm visible."
             }
+        }
+    }
+}
+
+#[component]
+fn SlButton(variant: String, size: String, pill: bool, children: Element) -> Element {
+    rsx! {
+        sl-button { "variant": "{variant}", "size": "{size}", "pill": "{pill}", {children} }
+    }
+}
+
+#[component]
+fn MySwiper() -> Element {
+    use_effect(move || {
+        document::eval(
+            r#"
+            new Swiper(".mySwiper", {
+                slidesPerView: 3,
+                spaceBetween: 30,
+                freeMode: true,
+                pagination: {
+                    el: ".swiper-pagination",
+                    clickable: true,
+                },
+            });
+        "#,
+        );
+    });
+
+    rsx! {
+        div { class: "swiper mySwiper",
+            div { class: "swiper-wrapper",
+                for i in 1..=9 {
+                    div { class: "swiper-slide", "Slide {i}" }
+                }
+            }
+            div { class: "swiper-pagination" }
         }
     }
 }

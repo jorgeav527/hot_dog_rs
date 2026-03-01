@@ -24,6 +24,13 @@ fn main() {
 fn App() -> Element {
     rsx! {
         document::Stylesheet { href: CSS }
+        document::Stylesheet { href: "https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.20.1/cdn/themes/light.css" }
+        document::Script {
+            src: "https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.20.1/cdn/shoelace-autoloader.js",
+            r#type: "module",
+        }
+        document::Stylesheet { href: "https://cdn.jsdelivr.net/npm/swiper@12/swiper-bundle.min.css" }
+        document::Script { src: "https://cdn.jsdelivr.net/npm/swiper@12/swiper-bundle.min.js" }
         Router::<Route> {}
     }
 }
