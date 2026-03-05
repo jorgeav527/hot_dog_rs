@@ -1,5 +1,6 @@
 use chrono::{Datelike, Local, Timelike};
 use dioxus::prelude::*;
+use std::time::Duration;
 use tracing::info;
 
 // 1. Define the data structure for the article
@@ -25,6 +26,12 @@ fn current_timezone() -> String {
     // This returns the offset from UTC (e.g., +05:00)
     Local::now().offset().to_string()
 }
+
+async fn do_async_work() {
+    // This simulates a network request or a heavy calculation
+    async_std::task::sleep(std::time::Duration::from_secs(2)).await;
+}
+
 // 3. The Component function
 #[component]
 pub fn BlogPost(props: BlogProps) -> Element {
@@ -39,8 +46,24 @@ pub fn BlogPost(props: BlogProps) -> Element {
     let mut copied = use_signal(|| false);
     let user_name = Some("Alice");
     let mut items_list = use_signal(|| vec!["Hello", "Dioxus"]);
+    let mut loading = use_signal(|| false);
+    let mut text = use_signal(|| "Complete!");
 
     rsx! {
+        button {
+            onclick: move |_| async move {
+                // 1. Immediately update UI to "Loading"
+                text.set("Loading...");
+                loading.set(true);
+
+                do_async_work().await;
+                // 3. Update UI to "Complete"
+                text.set("Complete!");
+                loading.set(false);
+            },
+            "Status: {text} (Loading: {loading})"
+        }
+        ShoppingCart {}
         SlButton { variant: "success", size: "small", pill: true,
             "Success Button" // This is the 'children'
         }
@@ -181,6 +204,36 @@ fn MySwiper() -> Element {
                 }
             }
             div { class: "swiper-pagination" }
+        }
+    }
+}
+
+#[component]
+fn ShoppingCart() -> Element {
+    // 1. Setup our Signals
+    let mut count = use_signal(|| 1);
+    let mut coupon_code = use_signal(|| String::new());
+    let total_price = use_memo(move || {
+        println!("--- Memo Scope: Recalculating Price ---");
+        count() * 10
+    });
+
+    println!("--- The Component Scope is Running! ---");
+
+    rsx! {
+        div {
+            h1 { "Items in cart: {count}" } // <-- READ occurring here!
+
+            // This button triggers a re-render because 'count' is read above.
+            button { onclick: move |_| count += 1, "Add Item" }
+
+            // This input changes 'coupon_code', but 'coupon_code' is NOT read in RSX.
+            input {
+                placeholder: "Enter Coupon...",
+                oninput: move |evt| coupon_code.set(evt.value()),
+            }
+            h2 { "Total: ${total_price}" }
+            p { "Check your console to see when I re-render." }
         }
     }
 }
