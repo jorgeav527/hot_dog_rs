@@ -42,6 +42,8 @@ enum Route {
     DogView {}, // The {} here matches the component call
     #[route("/favorites")]
     Favorites {},
+    #[route("/myerrors")]
+    MainError {},
     #[route("/:..segments")]
     PageNotFound { segments: Vec<String> },
 }

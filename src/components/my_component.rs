@@ -1,4 +1,4 @@
-use chrono::{Datelike, Local, Timelike};
+use chrono::{Local, Timelike};
 use dioxus::prelude::*;
 use std::time::Duration;
 use tracing::info;
@@ -50,6 +50,23 @@ pub fn BlogPost(props: BlogProps) -> Element {
     let mut text = use_signal(|| "Complete!");
 
     rsx! {
+        h1 { "Callback Return Example" }
+        // 2. Wrap only the "risky" part in the boundary
+        ErrorBoundary {
+            // Explicitly add the ": ErrorContext" type here
+            handle_error: |error: ErrorContext| rsx! {
+                div { class: "p-4 bg-red-100 text-red-800",
+                    p { "Something went wrong in the Dog list." }
+                    // Now the compiler knows exactly what 'error' is
+                    pre { "{error.error().unwrap()}" }
+                }
+            },
+            DataDisplay {}
+        } // Instance 1: Multiplies by 2
+        Counter { modify: Callback::new(|val| val * 2) }
+
+        // Instance 2: Squares the number
+        Counter { modify: Callback::new(|val| val * val) }
         button {
             onclick: move |_| async move {
                 // 1. Immediately update UI to "Loading"
@@ -235,5 +252,45 @@ fn ShoppingCart() -> Element {
             h2 { "Total: ${total_price}" }
             p { "Check your console to see when I re-render." }
         }
+    }
+}
+
+#[derive(PartialEq, Clone, Props)]
+pub struct CounterProps {
+    // I = u32 (the current count)
+    // O = u32 (the new count returned to the child)
+    modify: Callback<u32, u32>,
+}
+
+#[component]
+pub fn Counter(props: CounterProps) -> Element {
+    let mut count = use_signal(|| 1);
+
+    rsx! {
+        div { style: "border: 1px solid #ccc; padding: 10px; margin: 10px;",
+            button {
+                // We call the closure provided by the parent
+                // and use its return value to update our local state
+                onclick: move |_| {
+                    let new_val = props.modify.call(count());
+                    count.set(new_val);
+                },
+                "Apply Parent Logic"
+            }
+            div { "Local Count: {count}" }
+        }
+    }
+}
+
+#[component]
+fn DataDisplay() -> Element {
+    // This will fail because "abc" is not a number.
+    // The '?' operator returns a RenderError immediately.
+    let count = "abc"
+        .parse::<i32>()
+        .context("Failed to parse count from string")?;
+
+    rsx! {
+        div { "The count is: {count}" }
     }
 }
